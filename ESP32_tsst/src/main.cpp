@@ -146,7 +146,7 @@ void display()
     n++;
     if(n<5) return;
     n=0;
-    high_cm = (high - 302) * 27.0f / 55.0f;
+    high_cm = (high - 315) * 27.0f / 68.0f;
     high_cm = (high_cm + l0 + l1 + l2) / 4.0f;
     l2 = l1;
     l1 = l0;
