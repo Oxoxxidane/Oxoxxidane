@@ -24,8 +24,15 @@ uint16_t hour24min = 0x00; //24小时最小降雨量
 
 /*========液位=======*/
 
+uint16_t ch4;
+uint16_t ch5;
+uint16_t ch6;
+uint16_t ch7;
+
 uint16_t high = 0;    //液位高度
 float high_cm = 0.0f; //液位单位换算
+
+/*======雨量计驱动=====*/
 
 void set_zero()
 {//雨量计数据清零
@@ -71,6 +78,28 @@ void mea1()
     hour24max = temp[15] << 8 | temp[16];
     hour24min = temp[19] << 8 | temp[20];
   }
+}
+
+/*======液位计驱动=======*/
+
+void mea2()
+{
+  static uint16_t l[3]={};
+
+  ch4 = analogRead(13);
+  ch5 = analogRead(12);
+  ch6 = analogRead(14);
+  ch7 = analogRead(27);
+  //取平均
+  high = (ch4 + ch5 + ch6 + ch7) >> 2;
+  //均值滤波
+  for(uint8_t i=0; i<3; i++) high+=l[i];
+  high=high / 4;
+  for(uint8_t i=2; i>0; i--) l[i]=l[i-1];
+  l[0]=high;
+
+  //换算
+  
 }
 
 void setup() 
