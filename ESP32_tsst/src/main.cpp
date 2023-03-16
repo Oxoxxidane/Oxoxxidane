@@ -3,6 +3,7 @@
 #include "fonts.h"
 #include "SoftwareSerial.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 #define u8 unsigned char
 #define u16 unsigned short
@@ -166,6 +167,12 @@ void display()
   }
 }
 
+void send()
+{
+  //char TXdata[50] = {};
+  Serial.printf("%10.1f%10.1f%10.1f%10.1f", high_cm, now / 10.0f, hour / 10.0f, today / 10.0f);
+}
+
 void key()
 {//按键检测
   static u8 sw_last = 1, cf_last = 1;
@@ -235,7 +242,7 @@ void setup()
 
 void loop() 
 {
-  static uint8_t n1=0;
+  static uint8_t n1=0,n2=0;
   key();
   display();
   delay(10);
@@ -246,10 +253,16 @@ void loop()
       mea1();
       n1=0;
     }
-    n1++;
+    else n1++;
   }
   else if(mode == 2)
   {
     mea2();
   }
+  if(n2==50) 
+  {
+    send();
+    n2 = 0;
+  }
+  else n2++;
 }
